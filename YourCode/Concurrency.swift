@@ -53,16 +53,20 @@ import Foundation
 
 class FetchMessages {
     
-    let queue = DispatchQueue.global(qos: .background)
-    let dispatchGroup = DispatchGroup()
-    let startTime = CFAbsoluteTimeGetCurrent()
-    
     func loadMessage(completion: @escaping (String) -> Void) {
+        let queue = DispatchQueue.global(qos: .background)
+        let dispatchGroup = DispatchGroup()
+        let startTime = CFAbsoluteTimeGetCurrent()
+        var messages = [String]()
+        var timeElapsed = [Double]()
+        
         dispatchGroup.enter()
         queue.async {
-            fetchMessageOne { [unowned self] (messageOne)  in
-                print(messageOne)
-                self.dispatchGroup.leave()
+            fetchMessageOne { (messageOne)  in
+                let endTime = CFAbsoluteTimeGetCurrent() - startTime
+                timeElapsed.append(endTime)
+                messages.append(messageOne)
+                dispatchGroup.leave()
             }
         }
         // wait ...
@@ -70,14 +74,14 @@ class FetchMessages {
         
         dispatchGroup.enter()
         queue.async {
-            fetchMessageTwo { [unowned self] (messageTwo) in
-                print(messageTwo)
-                self.dispatchGroup.leave()
+            fetchMessageTwo { (messageTwo) in
+                let endTime = CFAbsoluteTimeGetCurrent() - startTime
+                timeElapsed.append(endTime)
+                messages.append(messageTwo)
+                dispatchGroup.leave()
             }
         }
         
-        /// The completion handler that should be called with the joined messages from fetchMessageOne & fetchMessageTwo
-        /// Please delete this comment before submission.
         dispatchGroup.notify(queue: .main) {
             completion("Good morning!")
         }

@@ -9,7 +9,7 @@ import UIKit
 class ViewController: UIViewController {
 
     var fetchMessage = FetchMessages()
-    let label = UILabel(frame: .zero)
+    let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 100))
     
     override func viewDidLoad() {
         super.viewDidLoad()
