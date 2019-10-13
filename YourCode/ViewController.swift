@@ -8,15 +8,16 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var fetchMessage = FetchMessages()
     let label = UILabel(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLabel()
         
-        label.text = "loading"
+        label.text = "loading..."
         
-        loadMessage { combinedMessage in
+        fetchMessage.loadMessage { combinedMessage in
             self.label.text = combinedMessage
         }
     }

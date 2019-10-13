@@ -50,15 +50,36 @@ import Foundation
 /// * Code readability & matching apple naming guidelines
 /// * Showing work through git history
 ///
-func loadMessage(completion: @escaping (String) -> Void) {
+
+class FetchMessages {
     
-    fetchMessageOne { (messageOne) in
+    let queue = DispatchQueue.global(qos: .background)
+    let dispatchGroup = DispatchGroup()
+    let startTime = CFAbsoluteTimeGetCurrent()
+    
+    func loadMessage(completion: @escaping (String) -> Void) {
+        dispatchGroup.enter()
+        queue.async {
+            fetchMessageOne { [unowned self] (messageOne)  in
+                print(messageOne)
+                self.dispatchGroup.leave()
+            }
+        }
+        // wait ...
+        dispatchGroup.wait()
+        
+        dispatchGroup.enter()
+        queue.async {
+            fetchMessageTwo { [unowned self] (messageTwo) in
+                print(messageTwo)
+                self.dispatchGroup.leave()
+            }
+        }
+        
+        /// The completion handler that should be called with the joined messages from fetchMessageOne & fetchMessageTwo
+        /// Please delete this comment before submission.
+        dispatchGroup.notify(queue: .main) {
+            completion("Good morning!")
+        }
     }
-    
-    fetchMessageTwo { (messageTwo) in
-    }
-    
-    /// The completion handler that should be called with the joined messages from fetchMessageOne & fetchMessageTwo
-    /// Please delete this comment before submission.
-    completion("Good morning!")
 }
