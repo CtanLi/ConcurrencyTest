@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         
         label.text = "loading..."
         
-        fetchMessage.loadMessage { combinedMessage in
+        fetchMessage.loadMessage { combinedMessage, executionTime  in
             self.label.text = combinedMessage
         }
     }

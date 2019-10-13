@@ -53,7 +53,8 @@ import Foundation
 
 class FetchMessages {
     
-    func loadMessage(completion: @escaping (String) -> Void) {
+    func loadMessage(completion: @escaping (String, Double) -> Void) {
+        let timeOutMessage = "Unable to load message - Time out exceeded"
         let queue = DispatchQueue.global(qos: .background)
         let dispatchGroup = DispatchGroup()
         let startTime = CFAbsoluteTimeGetCurrent()
@@ -83,7 +84,21 @@ class FetchMessages {
         }
         
         dispatchGroup.notify(queue: .main) {
-            completion("Good morning!")
+            let fullMessage = messages.concatenate(separator: " ")
+            self.executionTime(elements: timeElapsed) > 2 ? completion(timeOutMessage, self.executionTime(elements: timeElapsed)) : completion(fullMessage, self.executionTime(elements: timeElapsed))
         }
+    }
+    
+    //checking if time is greater than 2sec
+    func executionTime(elements: [Double]) -> Double {
+       let timeInSec = elements.filter( {$0 > 2.0 }).map({ return $0 })
+        return timeInSec.first ?? 0.0
+     }
+}
+
+//concatenating both mesages to one
+extension Array where Element == String {
+    func concatenate(separator: String) -> String {
+        return self.compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: separator)
     }
 }

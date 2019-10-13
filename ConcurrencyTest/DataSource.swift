@@ -15,9 +15,9 @@ func _asyncStringAfter(value: String, completion: @escaping (String) -> Void) {
 }
 
 func fetchMessageOne(completion: @escaping (String) -> Void) {
-    _asyncStringAfter(value: "Hello", completion: completion)
+    _asyncStringAfter(value: "Good", completion: completion)
 }
 
 func fetchMessageTwo(completion: @escaping (String) -> Void) {
-    _asyncStringAfter(value: "world", completion: completion)
+    _asyncStringAfter(value: "morning!", completion: completion)
 }
